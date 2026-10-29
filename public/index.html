@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10121a">
+  <meta name="description" content="Explore live webpages and capture a promotional screenshot set automatically.">
+  <title>Pageframe — Promotional Screenshot Bot</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="/" aria-label="Pageframe home">
+        <span class="brand-mark"><svg viewBox="0 0 36 36" aria-hidden="true"><rect x="4" y="4" width="28" height="28" rx="8" fill="currentColor" opacity=".16"/><path d="M11 11h14v14H11z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15 15h10v10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        <span><strong>pageframe</strong><small>SCREENSHOT STUDIO</small></span>
+      </a>
+      <div class="side-label">WORKSPACE</div>
+      <a class="nav-item active" href="#capture"><span class="nav-icon">◉</span> Capture studio <span class="nav-current"></span></a>
+      <a class="nav-item" href="#results"><span class="nav-icon">▧</span> Screenshot gallery</a>
+      <div class="side-divider"></div>
+      <div class="side-label">HOW IT WORKS</div>
+      <div class="sidebar-note"><span class="note-dot"></span><div><strong>Real browser engine</strong><p>Playwright opens the page, scrolls it, clicks tab controls and saves PNGs.</p></div></div>
+      <div class="sidebar-bottom"><div class="engine-line"><span id="engine-dot" class="status-dot"></span><span id="engine-status">Checking browser engine…</span></div><span class="version">LOCAL WEB APP · V1.0</span></div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="breadcrumb"><span>Workspace</span><span class="crumb-sep">/</span><strong>Capture studio</strong></div>
+        <div class="topbar-right"><span class="secure-badge"><span>●</span> Local session</span><span class="avatar">PF</span></div>
+      </header>
+
+      <section class="intro" id="capture">
+        <div class="eyebrow"><span class="eyebrow-line"></span> AUTOMATED BROWSER CAPTURE</div>
+        <h1>Show every important<br><em>angle</em> of your website.</h1>
+        <p class="intro-copy">Give Pageframe your URLs. It opens each page in Chromium, captures the initial view, scroll positions and tab states, then bundles every screenshot into one ZIP.</p>
+        <div class="feature-row"><span><b>↳</b> Page-by-page navigation</span><span><b>↳</b> Auto tab exploration</span><span><b>↳</b> PNG + ZIP export</span></div>
+      </section>
+
+      <div class="workspace-grid">
+        <section class="panel setup-panel">
+          <div class="panel-heading"><div><span class="section-index">01</span><h2>Build a capture run</h2></div><span class="panel-tag">CONFIGURATION</span></div>
+          <form id="capture-form">
+            <label class="field-label" for="urls">PAGE URLS <span class="label-tip">One URL per line · up to 8</span></label>
+            <textarea id="urls" name="urls" rows="3" spellcheck="false" placeholder="https://yourwebsite.com/\nhttps://yourwebsite.com/features\nhttps://yourwebsite.com/pricing" required></textarea>
+            <div class="field-hint"><span class="hint-icon">↗</span> Public pages work best. Login-only content is not bypassed.</div>
+
+            <div class="field-divider"></div>
+            <div class="field-label">BROWSER SETTINGS</div>
+            <div class="setting-grid">
+              <div class="setting-field"><label for="width">Viewport width</label><div class="input-with-unit"><input id="width" type="number" min="800" max="1920" value="1440"><span>px</span></div></div>
+              <div class="setting-field"><label for="height">Viewport height</label><div class="input-with-unit"><input id="height" type="number" min="600" max="1200" value="1000"><span>px</span></div></div>
+              <div class="setting-field"><label for="scroll-steps">Scroll captures</label><select id="scroll-steps"><option value="0">Off</option><option value="2">2 positions</option><option value="3" selected>3 positions</option><option value="4">4 positions</option><option value="5">5 positions</option></select></div>
+              <div class="setting-field"><label for="max-tabs">Auto-explore tabs</label><select id="max-tabs"><option value="0">Off</option><option value="3">Up to 3 tabs</option><option value="5" selected>Up to 5 tabs</option><option value="8">Up to 8 tabs</option></select></div>
+            </div>
+
+            <div class="field-divider compact"></div>
+            <div class="toggle-list">
+              <label class="toggle-row"><span class="toggle-copy"><strong>Full-page screenshot</strong><small>One long screenshot of each page, where dimensions allow.</small></span><span class="switch"><input id="full-page" type="checkbox" checked><span class="switch-ui"></span></span></label>
+              <label class="toggle-row"><span class="toggle-copy"><strong>Dismiss common cookie banners</strong><small>Tries familiar consent-button labels; does not bypass sign-in.</small></span><span class="switch"><input id="dismiss-cookies" type="checkbox" checked><span class="switch-ui"></span></span></label>
+              <label class="toggle-row"><span class="toggle-copy"><strong>Follow tab-like controls automatically</strong><small>Finds visible tabs and likely section controls.</small></span><span class="switch"><input id="explore-tabs" type="checkbox" checked><span class="switch-ui"></span></span></label>
+            </div>
+
+            <div class="field-divider"></div>
+            <label class="field-label" for="selectors">OPTIONAL CUSTOM CLICK SELECTORS <span class="label-tip">Advanced</span></label>
+            <textarea id="selectors" name="selectors" rows="2" class="selector-input" spellcheck="false" placeholder='button[aria-controls="pricing"]&#10;#gallery-tab'></textarea>
+            <div class="field-hint">Use one CSS selector per line. The bot clicks each matching visible element once and captures the resulting state.</div>
+            <div class="form-footer"><span class="privacy-note"><span>⌑</span> Runs on your machine</span><button id="start-button" type="submit" class="primary-button"><span class="button-spark">✳</span> Start capture <span class="button-arrow">↗</span></button></div>
+            <div id="form-error" class="form-error" role="alert" hidden></div>
+          </form>
+        </section>
+
+        <aside class="right-column">
+          <section class="panel plan-panel">
+            <div class="panel-heading small-heading"><div><span class="section-index">02</span><h2>What gets captured</h2></div></div>
+            <div class="capture-steps">
+              <div class="capture-step"><span class="step-icon initial-icon">◫</span><div><strong>Initial viewport</strong><p>The first screen visitors see.</p></div><span class="step-check">✓</span></div>
+              <div class="capture-step"><span class="step-icon full-icon">▤</span><div><strong>Full page</strong><p>The complete page in one PNG.</p></div><span class="step-check">✓</span></div>
+              <div class="capture-step"><span class="step-icon scroll-icon">↕</span><div><strong>Scroll positions</strong><p>More sections, down the page.</p></div><span class="step-check">✓</span></div>
+              <div class="capture-step"><span class="step-icon tab-icon">▦</span><div><strong>Tab states</strong><p>Visible tabs and section controls.</p></div><span class="step-check">✓</span></div>
+            </div>
+            <div class="plan-footnote"><span class="footnote-icon">i</span><span>Some custom interfaces hide tabs behind menus or require sign-in. Add CSS selectors for controls the bot cannot detect.</span></div>
+          </section>
+
+          <section class="panel run-panel" id="run-panel">
+            <div class="panel-heading small-heading"><div><span class="section-index">03</span><h2>Run status</h2></div><span id="run-state" class="state-pill idle">IDLE</span></div>
+            <div id="empty-run" class="empty-run"><div class="empty-orbit"><span>⌁</span><i></i><i></i><i></i></div><strong>Ready when you are</strong><p>Your browser session and screenshot progress will show up here.</p></div>
+            <div id="run-details" hidden>
+              <div class="progress-copy"><span id="progress-title">Preparing browser</span><strong id="progress-number">0%</strong></div>
+              <div class="progress-track"><span id="progress-fill"></span></div>
+              <div class="run-current"><span class="pulse-dot"></span><span id="current-url">Waiting for job…</span></div>
+              <div id="run-log" class="run-log" aria-live="polite"></div>
+              <a id="download-button" class="download-button" href="#" hidden><span>↓</span> Download screenshot ZIP <b>↗</b></a>
+            </div>
+          </section>
+        </aside>
+      </div>
+
+      <section class="results-section" id="results">
+        <div class="results-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> OUTPUT</div><h2>Screenshot gallery <span id="screenshot-count">0</span></h2><p>Preview captured states and download the complete set.</p></div><span class="gallery-status"><span class="status-dot"></span><span id="gallery-state">Waiting for first run</span></span></div>
+        <div id="gallery" class="gallery-grid"><div class="gallery-empty"><div class="empty-frame"><span></span><span></span><span></span><b>PNG</b></div><strong>No screenshots yet</strong><p>Start a capture to populate the gallery.</p></div></div>
+      </section>
+      <footer class="footer"><span>PAGEFRAME <span class="footer-dot">·</span> CAPTURE STUDIO</span><span>Built for repeatable page exploration.</span></footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
